@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Du bist drin · GLOW.verkörpert</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="style.css">
+<style>
+.yes{font-size:clamp(46px,12vw,72px);line-height:1.05}
+.yes .wer{display:block;color:var(--gold);text-shadow:0 0 40px rgba(201,165,92,.55)}
+.funkeln{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.funkeln i{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px 3px rgba(201,165,92,.7);opacity:0;animation:funkeln 3.2s ease-in-out infinite}
+@keyframes funkeln{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:.95;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.funkeln{display:none}}
+.text p+p{margin-top:18px}
+.hintergrund{opacity:.6}
+.schritt{justify-content:flex-start;padding-top:min(62vw,320px)}
+</style>
+</head>
+<body>
+<div class="hintergrund" aria-hidden="true"></div>
+<div class="licht" aria-hidden="true" style="--glow:1.15"></div>
+<div class="funkeln" id="funkeln" aria-hidden="true"></div>
+<main class="buehne">
+  <div class="kopf"><span><b>GLOW</b>.VERKÖRPERT</span><span></span></div>
+  <section class="schritt">
+    <h1 class="yes">Yes<span id="name"></span>,<span class="wer">du bist drin!</span></h1>
+    <div class="text">
+      <p>Dein Glow-Raum ist offen.<br>Sieben Tage lang geht’s jetzt um dich.<br>Um deine Haut, darum, wie du dich in ihr fühlst, &amp; um die kleinen Momente, in denen du denkst: <em>Oh ja, davon will ich mehr.</em></p>
+      <p class="leise-text">In ein paar Minuten ist meine erste Mail bei dir.<br>Darin wartet dein Schlüssel zum Glow-Raum.<br>Falls du sie im Posteingang vermisst, schau kurz unter Werbung oder im Spam-Ordner nach.</p>
+      <p>Ich freu mich auf diese sieben Tage mit dir.</p>
+    </div>
+    <hr class="trenner">
+    <p style="font-style:italic">Von Herzen<br>deine Patricia</p>
+    <div class="signatur">GLOW.verkörpert 💎</div>
+  </section>
+</main>
+<nav class="fuss"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></nav>
+<script>
+try{const n=localStorage.getItem("glow_name");if(n)document.getElementById("name").textContent=", "+n}catch(e){}
+const f=document.getElementById("funkeln");
+for(let i=0;i<22;i++){const s=document.createElement("i");s.style.left=(5+Math.random()*90)+"%";s.style.top=(5+Math.random()*80)+"%";s.style.animationDelay=(Math.random()*3.2)+"s";f.appendChild(s)}
+</script>
+</body>
+</html>

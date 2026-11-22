@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Deine Glow-Woche · GLOW.verkörpert</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="../style.css">
+<style>
+.hintergrund{background-image:url("../patricia-lipgloss.jpg");opacity:.55}
+.inhalt{position:relative;z-index:1;width:100%;max-width:560px;display:flex;flex-direction:column;align-items:center;gap:32px;padding-top:min(52vw,280px)}
+.intro{display:flex;flex-direction:column;align-items:center;gap:18px}
+.stand{display:flex;flex-direction:column;align-items:center;gap:10px;font-family:var(--sans);font-weight:300;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand-leise)}
+.perlen{display:flex;gap:10px}
+.perlen span{width:12px;height:12px;border-radius:50%;background:rgba(201,165,92,.25);transition:background .5s,box-shadow .5s}
+.perlen span.an{background:var(--gold);box-shadow:0 0 12px rgba(201,165,92,.6)}
+.tage{display:flex;flex-direction:column;gap:14px;width:100%}
+.tag{border-radius:30px;background:var(--flaeche);box-shadow:0 8px 30px rgba(0,0,0,.18);overflow:hidden;transition:background .3s,box-shadow .3s}
+.tag.offen{background:rgba(201,165,92,.12);box-shadow:0 0 40px rgba(201,165,92,.18)}
+.tag.zu{opacity:.45}
+.tag-kopf{appearance:none;width:100%;background:none;border:0;cursor:pointer;color:var(--sand);display:flex;flex-direction:column;align-items:center;gap:4px;padding:20px 18px}
+.tag.zu .tag-kopf{cursor:default}
+.tag-kopf .titel{font-family:var(--serif);font-style:italic;font-weight:500;font-size:25px;line-height:1.25}
+.tag-kopf .hinweis{font-family:var(--sans);font-weight:300;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--sand-leise)}
+.tag.gespuert .tag-kopf .etikett::after{content:" ✓"}
+.tag-inhalt{display:flex;flex-direction:column;align-items:center;gap:16px;padding:0 22px 24px}
+.saeule-name{font-family:var(--sans);font-weight:300;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--sand-leise)}
+.spueren{appearance:none;cursor:pointer;border:0;background:rgba(201,165,92,.18);color:var(--sand);border-radius:999px;padding:12px 22px;font-family:var(--sans);font-weight:300;font-size:11px;letter-spacing:.2em;text-transform:uppercase;transition:background .3s,color .3s,box-shadow .3s}
+.leit{font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.3;color:var(--gold)}
+.wissen{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;padding:18px 18px 20px;border-radius:22px;background:rgba(201,165,92,.08);border:1px solid rgba(201,165,92,.25)}
+.wissen p{font-size:16px}
+.dezent{font-size:14px;line-height:1.6;color:var(--sand-leise);margin-top:6px;max-width:440px}
+.journal{font-family:var(--serif);font-style:italic;font-size:30px;line-height:1.2;color:var(--gold);white-space:nowrap;text-shadow:0 0 24px rgba(201,165,92,.35);margin:2px 0}
+.dezent a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,165,92,.4);white-space:nowrap}
+.spueren:hover,.spueren[aria-pressed="true"]{background:var(--gold);color:var(--espresso);box-shadow:0 0 30px rgba(201,165,92,.4)}
+</style>
+</head>
+<body>
+<div class="hintergrund" aria-hidden="true"></div>
+<div class="licht" id="licht" aria-hidden="true"></div>
+<main class="buehne">
+  <div class="kopf"><span><b>GLOW</b>.VERKÖRPERT</span><span></span></div>
+  <div class="inhalt">
+    <section class="intro">
+      <div class="etikett">Deine Glow-Woche</div>
+      <h1><span id="anrede">Für dich,</span><span class="name">dein Glow ist auf Reserve</span></h1>
+      <p>Sieben Tage.<br>Jeden Tag ein kleiner Moment, nur für dich.<br>Öffne jeden Morgen eine Karte &amp; lass sie wirken.</p>
+    </section>
+    <button class="hoeren" type="button" id="hoeren" hidden>
+      <span class="play"><svg viewBox="0 0 24 24"><path id="play-icon" d="M6 4l14 8-14 8z"/></svg></span>
+      <span><span class="titel">Eine Sprachnachricht von mir, nur für dich</span><span class="klein">Kopfhörer rein</span></span>
+    </button>
+    <div class="stand"><span id="stand-text"></span><div class="perlen" id="perlen"></div></div>
+    <div class="tage" id="tage"></div>
+    <div class="signatur">GLOW.verkörpert 💎</div>
+  </div>
+</main>
+<nav class="fuss"><a href="../impressum.html">Impressum</a><a href="../datenschutz.html">Datenschutz</a></nav>
+<script>
+const TAGE=[
+{
+"titel": "Du bist zuerst dran.",
+"saeule": "Körper & Sinnlichkeit",
+"text": "Bleib heute nach dem Aufwachen noch zwei Minuten liegen. Kein Handy. Keine Nachrichten. Leg deine Hände auf den Bauch & spür, wie er sich hebt & senkt. Der Tag kann warten. Du bist zuerst dran."
+},
+{
+"titel": "Ein Nein zu anderen ist ein Ja zu dir.",
+"saeule": "Bewusstsein",
+"text": "Sag heute einmal Nein. Zu etwas Kleinem, das eigentlich nicht deins ist. Spür, was danach in dir passiert. Ein Nein zu jemand anderem ist immer ein Ja zu dir selbst."
+},
+{
+"titel": "Fünf Minuten nur für dich.",
+"saeule": "Körper & Nervensystem",
+"text": "Mach heute eine Pause, von der niemand weiß. Fünf Minuten. Tür zu, Schultern runter, Augen zu.",
+"wissen": "Wenn du dauerhaft „auf Reserve“ läufst, hält dein Körper deinen Cortisolspiegel oben – das baut Kollagen ab & macht deine Haut empfindlich & dünn. Schon fünf Minuten bewusste Stille schalten dein Nervensystem um in den Regenerationsmodus.",
+"schluss": "Niemand muss das verstehen. Du darfst."
+},
+{
+"titel": "Jetzt trägst du deinen Körper.",
+"saeule": "Haut",
+"text": "Gönn dir heute Abend warmes Öl auf der Haut. Füße, Beine, Bauch – ganz langsam, ohne Eile.",
+"wissen": "Erschöpfung zeigt sich sofort an einer trockenen, geschwächten Hautbarriere. Warmes Pflanzenöl (wie Mandel- oder Jojobaöl) schließt die Feuchtigkeit ein, fördert die Mikrodurchblutung & erdet dich sofort.",
+"schluss": "Dein Körper hat dich den ganzen Tag getragen. Jetzt trägst du ihn."
+},
+{
+"titel": "Sortiere deine Energie.",
+"saeule": "Bewusstsein",
+"text": "Schau heute Abend auf deinen Tag. Was hat dir Kraft gegeben? Was hat an dir gezogen? Schreib dir beides auf. Nur für dich."
+},
+{
+"titel": "Eine Stunde gehört nur dir.",
+"saeule": "Körper & Sinnlichkeit",
+"text": "Heute Abend gehört eine Stunde dir. Handy weg, Licht runter, dein Lieblingslied an. Ein Bad, ein Buch, einfach sein. Hauptsache, es ist deins."
+},
+{
+"titel": "Bist du dir deines Seins bewusst?",
+"saeule": "Bewusstsein & Verbindung",
+"text": "7 Tage. 7 kleine Momente, nur für dich. Was hast du in dieser Woche gespürt? Was hat sich verändert – in deinem Blick, auf deiner Haut, in dir? Schreib mir. Ich will es wirklich wissen & lese jede Nachricht persönlich.",
+"dezent": "Du spürst, dass diese 7 Tage erst der Anfang waren? Gerade entsteht:",
+"journal": "The Glow Journal",
+"dezentNach": "40 Tage mit kleinen Beauty-Ritualen, in deinem Tempo. Weil du bereits hier bist, erfährst du als Erste davon."
+}
+];
+// Ziel für "persönliche Begleitung" – solange es keine eigene Seite gibt: Instagram-DM
+const BEGLEITUNG_URL="https://ig.me/m/glow.mit.patricia";
+const TYP="reserve";
+const $=id=>document.getElementById(id);
+const lies=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const merk=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+
+const name=lies("glow_name");
+if(name)$("anrede").textContent=`Liebe ${name},`;
+
+// Die Woche beginnt beim ersten Öffnen. Jeden Tag öffnet sich eine Karte mehr.
+let start=Number(lies("glowwoche_start_"+TYP));
+if(!start){const h=new Date();h.setHours(0,0,0,0);start=h.getTime();merk("glowwoche_start_"+TYP,start)}
+const heute=new Date();heute.setHours(0,0,0,0);
+const offenBis=Math.min(7,Math.floor((heute.getTime()-start)/864e5)+1);
+
+let gespuert=new Set();
+try{JSON.parse(lies("glowwoche_gespuert_"+TYP)||"[]").forEach(i=>gespuert.add(i))}catch(e){}
+const speichern=()=>merk("glowwoche_gespuert_"+TYP,JSON.stringify([...gespuert]));
+
+function zeilen(el,txt){txt.split(/(?<=[.?!…])\s+|\n/).forEach((z,i)=>{if(i)el.appendChild(document.createElement("br"));el.appendChild(document.createTextNode(z))})}
+function stand(){
+  $("stand-text").textContent=`${gespuert.size} von 6 Tagen gespürt`;
+  [...$("perlen").children].forEach((p,i)=>p.classList.toggle("an",i<gespuert.size));
+  $("licht").style.setProperty("--glow",.6+gespuert.size*.09);
+}
+for(let i=0;i<6;i++)$("perlen").appendChild(document.createElement("span"));
+
+TAGE.forEach((t,i)=>{
+  const k=document.createElement("article");k.className="tag";
+  const kopf=document.createElement("button");kopf.className="tag-kopf";kopf.type="button";
+  kopf.innerHTML='<span class="etikett"></span><span class="titel"></span><span class="hinweis"></span>';
+  kopf.querySelector(".etikett").textContent=i<offenBis?`Tag ${i+1} · ${t.saeule}`:`Tag ${i+1}`;
+  if(i>=offenBis){
+    k.classList.add("zu");kopf.disabled=true;
+    const tage=i+1-offenBis;
+    kopf.querySelector(".titel").textContent="Wartet noch auf dich";
+    kopf.querySelector(".hinweis").textContent=tage===1?"öffnet sich morgen":`öffnet sich in ${tage} Tagen`;
+    k.appendChild(kopf);$("tage").appendChild(k);return;
+  }
+  kopf.querySelector(".titel").textContent=t.titel;
+  const inhalt=document.createElement("div");inhalt.className="tag-inhalt";inhalt.hidden=true;
+  if(t.leit){const l=document.createElement("p");l.className="leit";l.textContent=t.leit;inhalt.appendChild(l)}
+  const p=document.createElement("p");zeilen(p,t.text);inhalt.appendChild(p);
+  if(t.wissen){
+    const w=document.createElement("div");w.className="wissen";
+    const wl=document.createElement("div");wl.className="saeule-name";wl.textContent="Mein Experten-Wissen für dich";
+    const wp=document.createElement("p");zeilen(wp,t.wissen);
+    w.append(wl,wp);inhalt.appendChild(w);
+  }
+  if(t.schluss){const sp=document.createElement("p");zeilen(sp,t.schluss);inhalt.appendChild(sp)}
+  if(i===6){
+    const a=document.createElement("a");a.className="knopf";a.href="https://ig.me/m/glow.mit.patricia";a.target="_blank";a.rel="noopener";a.textContent="Schreib mir 💌";
+    inhalt.appendChild(a);
+    const d=document.createElement("p");d.className="dezent";zeilen(d,t.dezent);
+    if(t.dezentLink){const dl=document.createElement("a");dl.href=BEGLEITUNG_URL;dl.target="_blank";dl.rel="noopener";dl.textContent=t.dezentLink;d.append(" ",dl)}
+    if(t.journal){inhalt.appendChild(d);const j=document.createElement("p");j.className="journal";j.textContent=t.journal;inhalt.appendChild(j);const d2=document.createElement("p");d2.className="dezent";zeilen(d2,t.dezentNach);inhalt.appendChild(d2)}
+    if(!t.journal)inhalt.appendChild(d);
+  }else{
+    const b=document.createElement("button");b.className="spueren";b.type="button";
+    const setz=()=>{const an=gespuert.has(i);b.setAttribute("aria-pressed",an);b.textContent=an?"Gespürt ✓":"Ich habe es gespürt ✨";k.classList.toggle("gespuert",an)};
+    b.onclick=()=>{gespuert.has(i)?gespuert.delete(i):gespuert.add(i);setz();speichern();stand()};
+    setz();inhalt.appendChild(b);
+  }
+  kopf.onclick=()=>{const auf=inhalt.hidden;inhalt.hidden=!auf;k.classList.toggle("offen",auf);kopf.setAttribute("aria-expanded",auf)};
+  kopf.setAttribute("aria-expanded","false");
+  k.append(kopf,inhalt);$("tage").appendChild(k);
+  if(i===offenBis-1){inhalt.hidden=false;k.classList.add("offen");kopf.setAttribute("aria-expanded","true")}
+});
+// Sprachnachricht im Raum
+const audio=new Audio(`../audio/${TYP}.m4a`);
+audio.addEventListener("canplay",()=>{$("hoeren").hidden=false},{once:true});
+audio.addEventListener("ended",()=>$("play-icon").setAttribute("d","M6 4l14 8-14 8z"));
+audio.load();
+$("hoeren").onclick=()=>{
+  if(audio.paused){audio.play();$("play-icon").setAttribute("d","M6 4h4v16H6zM14 4h4v16h-4z")}
+  else{audio.pause();$("play-icon").setAttribute("d","M6 4l14 8-14 8z")}
+};
+stand();
+</script>
+</body>
+</html>

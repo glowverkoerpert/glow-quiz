@@ -1,0 +1,104 @@
+/* GLOW.verkörpert – gemeinsames Aussehen für Quiz, Glow-Woche & Rechtliches.
+   Espresso-Bühne, Patricia weich im Hintergrund, goldenes Licht, keine harten Kanten. */
+@import url("fonts/fonts.css");
+
+:root{
+  --espresso:#2A211B;
+  --sand:#E7DAC6;
+  --sand-leise:#B9AB97;
+  --gold:#C9A55C;
+  --beere:#E05A93;
+  --flaeche:rgba(231,218,198,.07);
+  --serif:"Cormorant Garamond",Garamond,"Times New Roman",serif;
+  --sans:"Montserrat","Helvetica Neue",Arial,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--espresso);color:var(--sand);
+  font-family:var(--serif);font-size:20px;line-height:1.5;text-align:center;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+/* Patricia im Hintergrund, weich aufgelöst */
+.hintergrund{
+  position:fixed;left:50%;top:0;z-index:0;pointer-events:none;
+  width:min(100vw,640px);aspect-ratio:4/5;transform:translateX(-50%);
+  background:url("patricia-lipgloss.jpg") center 12%/cover no-repeat;
+  -webkit-mask-image:radial-gradient(ellipse 55% 52% at 50% 34%,#000 0%,#000 30%,rgba(0,0,0,.7) 46%,rgba(0,0,0,.35) 60%,rgba(0,0,0,.1) 72%,transparent 82%);
+          mask-image:radial-gradient(ellipse 55% 52% at 50% 34%,#000 0%,#000 30%,rgba(0,0,0,.7) 46%,rgba(0,0,0,.35) 60%,rgba(0,0,0,.1) 72%,transparent 82%);
+  transition:opacity 1.2s ease;
+}
+.hintergrund.leise{opacity:.28}
+.licht{
+  position:fixed;left:50%;top:38%;z-index:0;pointer-events:none;
+  width:min(120vw,900px);aspect-ratio:1;
+  transform:translate(-50%,-50%) scale(var(--glow,.55));
+  background:radial-gradient(circle,rgba(201,165,92,.30) 0%,rgba(201,165,92,.12) 30%,rgba(176,48,106,.06) 50%,transparent 68%);
+  transition:transform 1.4s cubic-bezier(.2,.7,.2,1);
+  animation:atmen 7s ease-in-out infinite;
+}
+@keyframes atmen{0%,100%{opacity:.85}50%{opacity:1}}
+
+.buehne{
+  position:relative;z-index:1;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:24px 40px;
+}
+.kopf{
+  font-family:var(--sans);font-weight:300;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--sand-leise);
+  display:flex;justify-content:space-between;width:100%;max-width:560px;
+}
+.kopf b{font-weight:400;color:var(--gold)}
+.schritt{
+  flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:28px;
+  width:100%;max-width:560px;padding-block:32px;animation:auf .7s ease both;
+}
+@keyframes auf{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+h1,h2{font-style:italic;font-weight:400;line-height:1.12;text-wrap:balance;margin:0}
+h1{font-size:clamp(40px,10vw,60px)}
+h2{font-size:clamp(28px,7vw,40px)}
+em{font-style:italic;color:var(--beere)}
+p{margin:0;text-wrap:balance}
+.leise-text{color:var(--sand-leise)}
+.name{font-style:normal;text-transform:uppercase;letter-spacing:.14em;font-weight:500;color:var(--beere);display:block;font-size:.62em;margin-top:6px}
+.etikett{font-family:var(--sans);font-weight:300;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+
+.knopf{
+  display:inline-block;appearance:none;border:0;cursor:pointer;text-decoration:none;
+  background:var(--gold);color:var(--espresso);
+  font-family:var(--sans);font-weight:400;font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+  padding:18px 34px;border-radius:999px;box-shadow:0 0 36px rgba(201,165,92,.35);
+  transition:background .3s,box-shadow .3s;
+}
+.knopf:hover{background:rgba(201,165,92,.85);box-shadow:0 0 50px rgba(201,165,92,.5)}
+:focus-visible{outline:2px solid var(--beere);outline-offset:3px}
+
+.trenner{width:120px;height:1px;border:0;margin:6px 0;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.signatur{font-family:var(--sans);font-weight:300;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+
+.fuss{
+  position:relative;z-index:1;display:flex;gap:18px;justify-content:center;
+  padding:24px 16px calc(24px + env(safe-area-inset-bottom,0px));
+  font-family:var(--sans);font-weight:300;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+}
+.fuss a{color:var(--sand-leise);text-decoration:none}
+.fuss a:hover{color:var(--gold)}
+
+@media (prefers-reduced-motion:reduce){
+  .licht{animation:none;transition:none}
+  .schritt{animation:none}
+}
+
+/* Sprachnachricht-Button (Quiz-Ergebnis & Glow-Woche) */
+.hoeren{display:flex;align-items:center;gap:18px;width:100%;appearance:none;cursor:pointer;text-align:left;border:0;background:rgba(201,165,92,.12);border-radius:32px;padding:18px 20px;color:var(--sand);font-family:var(--serif);box-shadow:0 0 40px rgba(201,165,92,.15)}
+.hoeren .play{flex:none;width:54px;height:54px;border-radius:50%;background:var(--gold);display:grid;place-items:center;box-shadow:0 0 30px rgba(201,165,92,.35)}
+.hoeren .play svg{width:18px;height:18px;margin-left:3px;fill:var(--espresso)}
+.hoeren .titel{font-size:22px;line-height:1.2;font-style:italic}
+.hoeren .klein{display:block;font-family:var(--sans);font-weight:300;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand-leise);margin-top:4px}

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Abmelden · GLOW.verkörpert</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="style.css">
+<style>
+.schritt{justify-content:flex-start;padding-top:min(62vw,320px)}
+.knoepfe{display:flex;flex-direction:column;align-items:center;gap:14px}
+.knopf.zart{background:rgba(201,165,92,.14);color:var(--sand);box-shadow:none}
+.knopf.zart:hover{background:rgba(201,165,92,.3)}
+</style>
+</head>
+<body>
+<div class="hintergrund leise" aria-hidden="true"></div>
+<div class="licht" aria-hidden="true"></div>
+<main class="buehne">
+  <div class="kopf"><span><b>GLOW</b>.VERKÖRPERT</span><span></span></div>
+
+  <!-- Schritt 1: Nachfrage -->
+  <section class="schritt" id="frage">
+    <h2>Ganz sicher, dass du dich abmelden möchtest?</h2>
+    <p class="leise-text">Wenn du meine Glow-Mails weiterhin gern im Postfach hast, bleib einfach da.<br>Und wenn du gerade Platz für anderes brauchst, darfst du hier ganz entspannt auf „Abmelden“ klicken.</p>
+    <div class="knoepfe">
+      <button class="knopf" type="button" id="bleiben">Ich bleibe dabei</button>
+      <button class="knopf zart" type="button" id="abmelden">Ja, bitte abmelden</button>
+    </div>
+    <hr class="trenner">
+    <p style="font-style:italic">Von Herzen<br>deine Patricia</p>
+    <div class="signatur">GLOW.verkörpert 💎</div>
+  </section>
+
+  <!-- Schritt 2a: geblieben -->
+  <section class="schritt" id="geblieben" hidden>
+    <h2>Wie schön<span class="n"></span>.</h2>
+    <p class="leise-text">Du bleibst dabei.<br>Ich freu mich auf alles, was wir noch zusammen entdecken.</p>
+    <hr class="trenner">
+    <p style="font-style:italic">Von Herzen<br>deine Patricia</p>
+    <div class="signatur">GLOW.verkörpert 💎</div>
+  </section>
+
+  <!-- Schritt 2b: abgemeldet -->
+  <section class="schritt" id="fertig" hidden>
+    <h2>Alles gut<span class="n"></span>.<br>Du bist abgemeldet.</h2>
+    <p class="leise-text">Danke, dass du ein Stück des Weges mit mir gegangen bist.<br>Wenn du magst, findest du mich weiter auf Instagram.</p>
+    <div><a class="knopf" href="https://www.instagram.com/glow.mit.patricia/" target="_blank" rel="noopener">@glow.mit.patricia</a></div>
+    <hr class="trenner">
+    <p style="font-style:italic">Von Herzen<br>deine Patricia</p>
+    <div class="signatur">GLOW.verkörpert 💎</div>
+  </section>
+
+  <!-- Fallback: kein Abmelde-Link vorhanden -->
+  <section class="schritt" id="ohne" hidden>
+    <h2>Fast geschafft.</h2>
+    <p class="leise-text">Antworte einfach kurz auf eine meiner Mails mit „Abmelden“.<br>Dann nehme ich dich persönlich raus.</p>
+  </section>
+</main>
+<nav class="fuss"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></nav>
+<script>
+// Der persönliche Brevo-Abmeldelink kommt aus der Mail hinter dem #
+const ziel=decodeURIComponent(location.hash.slice(1));
+const $=id=>document.getElementById(id);
+try{const n=localStorage.getItem("glow_name");if(n)document.querySelectorAll(".n").forEach(e=>e.textContent=", "+n)}catch(e){}
+const zeige=id=>{["frage","geblieben","fertig","ohne"].forEach(s=>$(s).hidden=s!==id);window.scrollTo(0,0)};
+$("bleiben").onclick=()=>zeige("geblieben");
+$("abmelden").onclick=async()=>{
+  if(!/^https:\/\/[^ ]+$/.test(ziel)){zeige("ohne");return}
+  try{await fetch(ziel,{mode:"no-cors",credentials:"omit"});zeige("fertig")}
+  catch(e){location.href=ziel}
+};
+</script>
+</body>
+</html>

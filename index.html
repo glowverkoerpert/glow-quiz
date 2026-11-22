@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Welcher Glow-Typ bist du? · GLOW.verkörpert</title>
+<meta name="description" content="Dir fehlt nichts. & doch fehlt dir was … Finde in fünf Fragen heraus, wie dein Glow gerade lebt.">
+<meta property="og:title" content="Welcher Glow-Typ bist du?">
+<meta property="og:description" content="Komm näher. Dein Glow hat dir etwas zu erzählen.">
+<meta property="og:image" content="patricia-lipgloss.jpg">
+<link rel="stylesheet" href="style.css">
+<style>
+#s-start{justify-content:flex-end;padding-top:min(78vw,420px)}
+form{display:flex;flex-direction:column;align-items:center;gap:18px;width:100%}
+.feld{display:flex;flex-direction:column;gap:6px;width:100%}
+.feld label{font-family:var(--sans);font-weight:300;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand-leise)}
+.feld input{border:0;background:var(--flaeche);color:var(--sand);font-family:var(--serif);font-style:italic;font-size:24px;padding:12px 20px;border-radius:999px;text-align:center}
+.feld input::placeholder{color:rgba(185,171,151,.5)}
+.haken{display:flex;gap:12px;align-items:flex-start;text-align:left;font-size:17px;line-height:1.4;color:var(--sand-leise);cursor:pointer}
+.haken input{accent-color:var(--gold);width:18px;height:18px;margin-top:3px;flex:none}
+.haken a{color:var(--sand)}
+.fehler{font-family:var(--sans);font-size:12px;color:var(--beere);min-height:1em}
+.versteckt{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.fortschritt{display:flex;gap:6px;width:100%}
+.fortschritt span{flex:1;height:3px;background:rgba(201,165,92,.25);border-radius:2px;transition:background .5s}
+.fortschritt span.an{background:var(--gold)}
+.antworten{display:flex;flex-direction:column;gap:12px;width:100%}
+.antwort{appearance:none;cursor:pointer;border:0;background:var(--flaeche);border-radius:28px;color:var(--sand);font-family:var(--serif);font-size:21px;line-height:1.35;padding:18px 22px;box-shadow:0 8px 30px rgba(0,0,0,.18);transition:background .3s,box-shadow .3s,transform .3s}
+.antwort:hover{background:rgba(201,165,92,.16);box-shadow:0 0 34px rgba(201,165,92,.22)}
+.antwort.gewaehlt{background:rgba(201,165,92,.26);transform:scale(.99)}
+.ergebnis{justify-content:flex-start;gap:30px}
+.ergebnis .text{display:flex;flex-direction:column;gap:16px;font-size:21px}
+.anrede{font-style:italic;color:var(--gold)}
+.saeulen{display:flex;flex-direction:column;gap:12px;width:100%}
+.saeule{display:grid;justify-items:center;gap:6px;background:rgba(231,218,198,.05);border-radius:28px;padding:22px 20px}
+.saeule .etikett{font-size:10px}
+.saeule p{font-size:20px;line-height:1.45}
+.schluss{display:flex;flex-direction:column;gap:16px;align-items:center}
+.schluss h2{font-style:italic}
+.knopf.zart{background:rgba(201,165,92,.18);color:var(--sand);box-shadow:none}
+.knopf.zart:hover{background:var(--gold);color:var(--espresso)}
+.feld-hinweis{display:block;margin-top:6px;font-size:12px;line-height:1.4;color:var(--sand-leise);text-align:center}
+.kein-spam{font-size:12px;line-height:1.6;color:var(--sand-leise);text-align:center;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="hintergrund" id="hintergrund" aria-hidden="true"></div>
+<div class="licht" id="licht" aria-hidden="true"></div>
+
+<!-- Für Netlify: damit das Formular beim Hochladen erkannt wird -->
+
+<main class="buehne">
+  <div class="kopf"><span><b>GLOW</b>.VERKÖRPERT</span><span id="zaehler"></span></div>
+
+  <section class="schritt" id="s-start">
+    <h1>Dir fehlt nichts.<br><em>&amp; doch fehlt dir was …</em></h1>
+    <p class="leise-text">Komm näher.<br>Dein Glow hat dir etwas zu erzählen.</p>
+    <div><button class="knopf" id="los" type="button">Ich will's spüren</button></div>
+  </section>
+
+  <section class="schritt" id="s-name" hidden>
+    <h2>Dein Glow hat dir geantwortet.</h2>
+    <p class="leise-text">Eine persönliche Sprachnachricht von mir wartet schon auf dich.<br>Verrat mir noch kurz deinen Namen &amp; deine E-Mail, damit sich dein Raum öffnet:</p>
+    <form id="formular" novalidate>
+      <div class="feld"><label for="vorname">Dein Vorname</label><input id="vorname" autocomplete="given-name" placeholder="Vorname"></div>
+      <div class="feld"><label for="email">Deine E-Mail-Adresse</label><input id="email" type="email" autocomplete="email" placeholder="deine@mail.de"></div>
+      <p class="versteckt"><label>Nicht ausfüllen <input id="bot-field" tabindex="-1" autocomplete="off"></label></p>
+      <label class="haken" for="einverstanden"><input type="checkbox" id="einverstanden">
+        <span>Ja, öffne meinen Raum &amp; halte mich zu meiner Glow-Reise auf dem Laufenden (jederzeit abmeldbar · <a href="datenschutz.html" target="_blank">Datenschutz</a>).</span></label>
+      <p class="fehler" id="fehler" role="alert"></p>
+      <div><button class="knopf" type="submit">Meinen Raum öffnen ✨</button></div>
+      <p class="kein-spam">Kein Spam.<br>Nur echte Impulse von mir für dich.</p>
+    </form>
+  </section>
+
+  <section class="schritt" id="s-frage" hidden>
+    <div class="fortschritt" id="fortschritt"><span></span><span></span><span></span><span></span><span></span></div>
+    <h2 id="frage-text"></h2>
+    <div class="antworten" id="antworten"></div>
+  </section>
+
+  <section class="schritt ergebnis" id="s-ergebnis" hidden>
+    <div class="etikett">Dein Glow-Typ</div>
+    <h1 id="typ-titel"></h1>
+    <div class="text" id="typ-text"></div>
+
+    <button class="hoeren" type="button" id="hoeren" hidden>
+      <span class="play"><svg viewBox="0 0 24 24"><path id="play-icon" d="M6 4l14 8-14 8z"/></svg></span>
+      <span><span class="titel">Eine Sprachnachricht von mir, nur für dich</span><span class="klein" id="hoeren-hinweis">Kopfhörer rein</span></span>
+    </button>
+
+    <hr class="trenner">
+    <h2 id="glow-titel"></h2>
+    <div class="saeulen" id="saeulen"></div>
+
+    <div class="schluss">
+      <h2>Bist du dir deines Seins bewusst?</h2>
+      <p>Deine Glow-Woche wartet auf dich.<br>Sieben Tage, jeden Tag ein kleiner Moment, nur für dich.<br>Für deine Haut, deinen Körper &amp; dein Bewusstsein.</p>
+      <a class="knopf" id="woche-link" href="glow-woche/leise.html">Zu deiner Glow-Woche</a>
+      <hr class="trenner">
+      <p>Und wenn du spürst, dass du tiefer gehen möchtest:<br>Schreib mir.<br>Ich freu mich auf dich.</p>
+      <a class="knopf zart" href="https://ig.me/m/glow.mit.patricia" target="_blank" rel="noopener">Schreib mir auf Instagram</a>
+      <div class="signatur">GLOW.verkörpert 💎</div>
+    </div>
+  </section>
+</main>
+
+<nav class="fuss"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></nav>
+
+<script>
+const FRAGEN=[
+  {f:"Stell dir einen Morgen vor, der nur dir gehört. Was macht ihn schön?",a:[
+    ["A","Dass ich nicht sofort funktionieren muss. Einfach mal langsam."],
+    ["B","Dass ich in den Spiegel schaue & mich mag, bevor der Tag losgeht."],
+    ["C","Dass ich spüre, worauf ich Lust habe. & es mir auch erlaube."]]},
+  {f:"Wenn deine Hände über deine Haut gleiten, was passiert da in dir?",a:[
+    ["A","Muss schnell gehen. Hauptsache, es tut gut."],
+    ["B","Mein Moment. Öl oder Creme auf der Haut, mein Duft, kurz nur ich."],
+    ["C","Ich will verstehen, was meine Haut wirklich braucht."]]},
+  {f:"Wonach ist dir gerade?",a:[
+    ["A","Nach Ruhe. Nach einem Tag, der nicht an mir zieht."],
+    ["B","Danach, mich wieder schön zu finden. Ohne Anlass."],
+    ["C","Nach Klarheit. Zu wissen, was meins ist."]]},
+  {f:"Jemand sagt dir, du siehst heute besonders schön aus. Was fühlst du?",a:[
+    ["A","Freu mich kurz & bin gedanklich schon wieder woanders."],
+    ["B","Ich wink ab. Ach, heute nicht."],
+    ["C","Ich nehm's an. Bin dankbar. & yes, ich spür's auch."]]},
+  {f:"Wo spürst du noch Sehnsucht?",a:[
+    ["A","Nach Zeit, die wirklich mir gehört."],
+    ["B","Danach, wieder gesehen zu werden. Von mir zuerst."],
+    ["C","Nach einem Weg, der sich nach mir anfühlt."]]}
+];
+
+const TYPEN={
+  A:{datei:"reserve",titel:'Dein Glow ist <span class="name">auf Reserve</span>',text:[
+    "Stell dir vor, der Tag fängt mit dir an.",
+    "Nicht mit der Liste. Nicht mit dem Handy. Mit dir.",
+    "Und du denkst gerade: Schön wär's. Ich hab keine Zeit.",
+    "Ganz ehrlich? An der Zeit liegt's nicht.",
+    "Es fehlt die Erlaubnis, dass du zuerst drankommst.",
+    "Alle anderen stehen längst in deinem Tag. Nur du noch nicht.",
+    "Leg mal die Hand auf deinen Bauch. Atme tief rein, bis es warm wird.",
+    "Zehn Sekunden. Mehr war das nicht.",
+    "Du spielst die Hauptrolle in deinem Leben. Dann darfst du auch die Erste sein."],
+   saeulen:[
+    ["Haut","Reib deine Hände aneinander, bis du die Wärme spürst. Leg sie kurz auf dein Gesicht. Dann nimm deine Creme & lass sie ganz sanft über dein Gesicht gleiten, von innen nach außen. Schenk dir diese kleine Aufmerksamkeit. Ein, zwei Minuten, nur für dich & deine Haut. Und schon bist du im Fühlen."],
+    ["Körper & Sinnlichkeit","Der erste Schluck am Morgen ist deiner. Warmes Zitronenwasser, wenn du magst mit einer Scheibe Ingwer, damit es dich von innen wärmt. Barfuß, Musik an. Bevor jemand anderes etwas von dir will."],
+    ["Bewusstsein","Bevor du aufstehst, frag dich: Wie möchte ich mich heute fühlen? Mach diese Frage zu deinem Lieblingsmoment am Morgen & geh wirklich ins Fühlen."]]},
+  B:{datei:"leise",titel:'Dein Glow ist <span class="name">leise</span>',text:[
+    "Weißt du noch, wie das mal war?",
+    "Du machst dich schön. Creme auf der Haut, dein Duft, ein Stoff, der sich gut anfühlt.",
+    "Du schaust in den Spiegel & denkst dir: yes.",
+    "Nicht für einen Anlass. Einfach so, weil du es dir wert bist.",
+    "Das ist nicht weg. Es ist nur leise geworden.",
+    "Irgendwann war immer jemand anderes dran. Das Schöne blieb im Schrank, die gute Creme war für später. Und später kam nicht.",
+    "Dabei musst du gar nichts aufholen.",
+    "Leg mal die Hand auf dein Schlüsselbein. Lass sie liegen. Spürst du, wie warm das wird?",
+    "Da ist sie. Die Frau, die du meinst.",
+    "Und sie hat Lust auf sich."],
+   saeulen:[
+    ["Haut","Deine Creme wartet nicht auf später. Sie wartet auf jetzt."],
+    ["Körper & Sinnlichkeit","Zieh dir etwas an, in dem du dich richtig gut fühlst. Leg deinen Duft auf, auch wenn du heute nichts vorhast. Only for you. Weil du es dir wert bist."],
+    ["Bewusstsein","Schließ deine Augen & frag dich: Wer möchte ich heute sein? Was möchte ich heute verkörpern?"]]},
+  C:{datei:"wach",titel:'Dein Glow ist <span class="name">wach</span>',text:[
+    "Du spürst es längst. Da ist noch mehr in dir.",
+    "Deshalb schaust du hin. Liest, probierst, hörst zu. Dieses Serum, jene Routine, die Übung, von der gerade alle reden.",
+    "Und dann stehst du vor tausend Möglichkeiten & weißt nicht, welche davon deine ist. Manchmal traust du dich auch einfach nicht.",
+    "Da draußen reden alle gleichzeitig. Kein Wunder, dass deine eigene Stimme dabei leiser wird.",
+    "Leg mal beide Hände auf dein Gesicht. Warm, ruhig, einfach halten. Atme einmal.",
+    "So still ist es da drin. & so klar.",
+    "Du musst nicht weitersuchen. Du darfst wählen.",
+    "Der perfekte Moment ist, wenn du dir selbst die Erlaubnis gibst."],
+   saeulen:[
+    ["Haut","Wenige, aber richtig gute Produkte, die deiner Haut guttun. Und wenn du noch nicht weißt, was deine Haut wirklich braucht: Let's talk about it."],
+    ["Körper & Sinnlichkeit","Musik an, Hüften kreisen lassen. Zwei Minuten, ohne Spiegel, ohne Plan. Dein Körper weiß, was er will."],
+    ["Bewusstsein","Was davon ist wirklich meins? Leg die Hand auf dein Herz, wenn du heute etwas entscheidest. Dein Körper antwortet schneller als dein Kopf. Ein Ja fühlt sich weit an, ein Nein eng."]]}
+};
+
+const $=id=>document.getElementById(id);
+let antworten=[],nr=0,vorname="",email="",audio=null;
+
+function merken(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function zeilen(el,txt){
+  el.textContent="";
+  txt.split(/(?<=[.?!…])\s+|\n/).forEach((z,i)=>{if(i)el.appendChild(document.createElement("br"));el.appendChild(document.createTextNode(z))});
+}
+function zeige(id){
+  document.querySelectorAll(".schritt").forEach(s=>s.hidden=s.id!==id);
+  $("hintergrund").classList.toggle("leise",id!=="s-start");
+  window.scrollTo(0,0);
+}
+function glow(stufe){$("licht").style.setProperty("--glow",stufe)}
+
+function frage(){
+  const q=FRAGEN[nr];
+  $("zaehler").textContent=`Frage ${nr+1} von 5`;
+  $("frage-text").textContent=q.f;
+  document.querySelectorAll("#fortschritt span").forEach((s,i)=>s.classList.toggle("an",i<=nr));
+  const box=$("antworten");box.innerHTML="";
+  q.a.forEach(([typ,txt])=>{
+    const b=document.createElement("button");
+    b.className="antwort";b.type="button";b.textContent=txt;
+    b.onclick=()=>{
+      b.classList.add("gewaehlt");antworten[nr]=typ;
+      setTimeout(()=>{nr++;glow(.55+nr*.11);nr<5?frage():namensSchritt()},380);
+    };
+    box.appendChild(b);
+  });
+  zeige("s-frage");
+}
+
+function auswerten(){
+  const z={A:0,B:0,C:0};antworten.forEach(t=>z[t]++);
+  const max=Math.max(z.A,z.B,z.C);
+  const oben=Object.keys(z).filter(k=>z[k]===max);
+  if(oben.length===1)return oben[0];
+  for(let i=antworten.length-1;i>=0;i--)if(oben.includes(antworten[i]))return antworten[i];
+  return oben[0];
+}
+
+function senden(typ){
+  // Brevo: Kontakt in Liste "Glow-Quiz" (Double-Opt-in), Attribut GLOWTYP steuert die Mail-Automatisierung
+  if($("bot-field").value)return;
+  const brevo=new URLSearchParams({
+    EMAIL:email,VORNAME:vorname,
+    GLOWTYP:{A:"Reserve",B:"Leise",C:"Wach"}[typ],
+    email_address_check:"",locale:"de",html_type:"simple"
+  });
+  fetch(BREVO_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:brevo.toString()}).catch(()=>{});
+}
+const BREVO_URL="https://e0778a51.sibforms.com/serve/MUIFAM_5CdEeUv5kY5zkpGNN96JiCjdgwoVUBSU91C3CoPWPa9dU83LNxe-38-x4HgLhjlAGq95Cwz2BlDqZCQVx3J3feLpBJ-p5IvXovlbsRI2ATkEg_mu6p_8BKGA65Oqki2BSWMZM9wpPxR4jzcqo03liDa14xvAB_8wBbngLvRzns27icZeSqckfD2rWI5G9m_sMfIBk6lNLkw==";
+
+function ergebnis(typ){
+  const t=TYPEN[typ];
+  senden(typ);
+  merken("glow_name",vorname);merken("glow_typ",t.datei);
+  glow(1.15);
+  $("zaehler").textContent="Dein Ergebnis";
+  $("typ-titel").innerHTML=t.titel;
+  const text=$("typ-text");text.innerHTML="";
+  const a=document.createElement("p");a.className="anrede";a.textContent=`Liebe ${vorname},`;text.appendChild(a);
+  t.text.forEach(s=>{const p=document.createElement("p");zeilen(p,s);text.appendChild(p)});
+  $("glow-titel").innerHTML="Let's glow, <em></em>";
+  $("glow-titel").querySelector("em").textContent=vorname+".";
+  const sb=$("saeulen");sb.innerHTML="";
+  t.saeulen.forEach(([k,v])=>{
+    const d=document.createElement("div");d.className="saeule";
+    d.innerHTML='<div class="etikett"></div><p></p>';
+    d.querySelector(".etikett").textContent=k;zeilen(d.querySelector("p"),v);
+    sb.appendChild(d);
+  });
+  $("woche-link").href=`glow-woche/${t.datei}.html`;
+  // Sprachnachricht nur zeigen, wenn die Aufnahme schon hochgeladen ist
+  audio=new Audio(`audio/${t.datei}.m4a`);
+  audio.addEventListener("canplay",()=>{$("hoeren").hidden=false},{once:true});
+  audio.addEventListener("ended",()=>$("play-icon").setAttribute("d","M6 4l14 8-14 8z"));
+  audio.load();
+  zeige("s-ergebnis");
+}
+
+$("hoeren").onclick=()=>{
+  if(!audio)return;
+  if(audio.paused){audio.play();$("play-icon").setAttribute("d","M6 4h4v16H6zM14 4h4v16h-4z")}
+  else{audio.pause();$("play-icon").setAttribute("d","M6 4l14 8-14 8z")}
+};
+
+function namensSchritt(){$("zaehler").textContent="Fast da";zeige("s-name");setTimeout(()=>$("vorname").focus(),300)}
+$("los").onclick=()=>{glow(.6);nr=0;antworten=[];frage()};
+
+$("formular").addEventListener("submit",e=>{
+  e.preventDefault();
+  const n=$("vorname").value.trim(),m=$("email").value.trim();
+  if(!n){$("fehler").textContent="Wie darf ich dich nennen?";return}
+  if(!/^\S+@\S+\.\S+$/.test(m)){$("fehler").textContent="Schau nochmal auf deine E-Mail-Adresse.";return}
+  if(!$("einverstanden").checked){$("fehler").textContent="Setz kurz das Häkchen, damit sich dein Raum öffnet.";return}
+  $("fehler").textContent="";vorname=n;email=m;ergebnis(auswerten());
+});
+</script>
+</body>
+</html>
