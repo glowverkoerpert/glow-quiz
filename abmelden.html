@@ -67,8 +67,8 @@ const zeige=id=>{["frage","geblieben","fertig","ohne"].forEach(s=>$(s).hidden=s!
 $("bleiben").onclick=()=>zeige("geblieben");
 $("abmelden").onclick=async()=>{
   if(!/^https:\/\/[^ ]+$/.test(ziel)){zeige("ohne");return}
-  try{await fetch(ziel,{mode:"no-cors",credentials:"omit"});zeige("fertig")}
-  catch(e){location.href=ziel}
+  // Abmeldung zuverlässig über Brevo selbst (Hintergrund-Aufruf greift nicht)
+  location.href=ziel;
 };
 </script>
 </body>
